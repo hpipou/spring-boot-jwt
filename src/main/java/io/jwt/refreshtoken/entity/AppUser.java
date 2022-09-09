@@ -19,7 +19,7 @@ public class AppUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
-    
+
     // Ne pas afficher le mot de passe quand on fait répond aux client via json type
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
