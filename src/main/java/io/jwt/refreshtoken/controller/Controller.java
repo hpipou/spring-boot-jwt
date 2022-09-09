@@ -1,5 +1,6 @@
 package io.jwt.refreshtoken.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jwt.refreshtoken.entity.AppRole;
 import io.jwt.refreshtoken.entity.AppUser;
 import io.jwt.refreshtoken.service.AccountService;
@@ -32,14 +33,21 @@ public class Controller {
     }
 
     @PostMapping("/roleToUser")
-    public String addRoleToUser(HttpServletRequest request, HttpServletResponse response) throws Exception{
+    public void addRoleToUser(HttpServletRequest request, HttpServletResponse response) throws Exception{
         accountService.addRoleToUser(request.getParameter("username"), request.getParameter("roleName"));
-        return "Role ajouté avec succès";
+        new ObjectMapper().writeValue(
+                response.getOutputStream(),
+                "Role Ajouté avec succès"
+        );
     }
 
     @PostMapping("/userInfo")
-    public AppUser loadOneUser(@RequestBody String username){
-        return accountService.loadOneUser(username);
+    public void loadOneUser(HttpServletRequest request, HttpServletResponse response) throws Exception{
+        response.setContentType("application/json");
+        new ObjectMapper().writeValue(
+                response.getOutputStream(),
+                accountService.loadOneUser(request.getParameter("username"))
+        );
     }
 
     @GetMapping("/users")
