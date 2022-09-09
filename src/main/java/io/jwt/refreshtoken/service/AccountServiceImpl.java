@@ -4,6 +4,7 @@ import io.jwt.refreshtoken.entity.AppRole;
 import io.jwt.refreshtoken.entity.AppUser;
 import io.jwt.refreshtoken.repository.AppRoleRepository;
 import io.jwt.refreshtoken.repository.AppUserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,17 +14,21 @@ import java.util.List;
 @Transactional  // NB : Transactionnal permet de laisser transiter les informations de l'entité AppRole à AppUser
 public class AccountServiceImpl implements AccountService {
 
+    private PasswordEncoder passwordEncoder;
     private AppUserRepository appUserRepository;
     private AppRoleRepository appRoleRepository;
 
     // On inject AppUserRepository et AppRoleRepository via un constructeur parce que @Autowired est devenu obselète
-    public AccountServiceImpl(AppUserRepository appUserRepository, AppRoleRepository appRoleRepository) {
+    public AccountServiceImpl(PasswordEncoder passwordEncoder, AppUserRepository appUserRepository, AppRoleRepository appRoleRepository) {
+        this.passwordEncoder = passwordEncoder;
         this.appUserRepository = appUserRepository;
         this.appRoleRepository = appRoleRepository;
     }
 
     @Override
     public AppUser addNewUser(AppUser appUser) {
+        String password=appUser.getPassword();
+        appUser.setPassword(passwordEncoder.encode(password));
         return appUserRepository.save(appUser);
     }
 
