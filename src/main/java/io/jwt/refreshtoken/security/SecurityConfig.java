@@ -2,10 +2,12 @@ package io.jwt.refreshtoken.security;
 
 import io.jwt.refreshtoken.entity.AppUser;
 import io.jwt.refreshtoken.jwt.JwtAuthentication;
+import io.jwt.refreshtoken.jwt.JwtAuthorization;
 import io.jwt.refreshtoken.service.AccountService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -17,6 +19,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -59,6 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(new JwtAuthentication(authenticationManagerBean()));
+        http.addFilterBefore(new JwtAuthorization(), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
