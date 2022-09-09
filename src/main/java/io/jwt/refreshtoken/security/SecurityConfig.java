@@ -58,7 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // Authentification par JWT token : STATLESS
         // Authentification par session cookies, par défaut c'est STATEFUL
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authorizeRequests().antMatchers("/h2-console/**").permitAll();
+        http.authorizeRequests().antMatchers("/h2-console/**","/refreshToken/**").permitAll();
 
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(new JwtAuthentication(authenticationManagerBean()));
